@@ -21,7 +21,7 @@
 
 </br>- **Import Dataset**: 
 
-We use VSCode to execute the codes so that we have to install neccessary python libs for further using. If you Google Colab then you an skip the steps of installing some of popular python libs that are alredy installed to Colab. 
+We use VSCode to execute the codes so that we have to install neccessary python libs for further using. If you use other IDE such as Google Colab then you an skip these steps of installing some of popular python libs that are already installed to Colab by default. 
 
 </br> Install the libs that we will use to analyze the dataset
 
@@ -40,7 +40,7 @@ import sklearn
 print(sklearn.__version__)
 ```
 
-</br> Import libs:
+</br> Import python libs for analysis and machine learninglearning:
 
 ```python
 import pandas as pd
@@ -94,6 +94,7 @@ df = pd.read_excel('/Users/hatde/Desktop/Online Retail II/online_retail_II.xlsx'
 </br> - **Initial Exploration:**
   
   - Review 10 top rows of the dataset:
+
 ```python
 df.head(10)
 ```
@@ -127,9 +128,13 @@ df.describe()
 |   max |  19152.00 |           2010-12-09 20:01:00 |  25111.09 |    18287.00 |
 |   std |    107.42 |                           NaN |    146.13 |     1680.81 |
 
-</br> The Min in Quantity and Price columns look weird since negative number of stocks bought by customer should not less than 0. However, we can also see the negative item quantity and 
+</br> The Min in Quantity and Price columns look weird since negative number of stocks bought by customer should not less than 0. However, we can also see the negative item quantity and price in some types of invoice for purpose of adjustment the number. Hence, we might not attempt to remove these missing value, at least for now, until we review all case of missing and hopefully decide which ones should be maintained in the dataset.
 
-  - Look at the descriptive 
+</br> We also see that there is missing values in Customer ID column. This might happen due to system errors when recording the transactions or mistake of staff during invoice issuance process. Generally speaking, our analysis is aim to cluster the customer base on RFM features, so that it does not make sense if we finish clustering the customer but end up lacking of information of those customers (which we must retreive from their Customer ID). I hope that you can also understand what I'm trying to saying.
+
+  - Look at the descriptive of ```object``` columns:
+
+
   - Aggregated metrics per customer:
   - Verify data types (e.g., InvoiceDate as datetime).
   - Summarize key metrics (e.g., transaction count, Quantity, UnitPrice).
