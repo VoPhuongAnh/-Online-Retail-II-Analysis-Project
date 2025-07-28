@@ -15,17 +15,121 @@
 
 ## 2. 📊 Data Understanding
 - **Data Source**: UCI Machine Learning Repository (Online Retail II, ID: 502, CC BY 4.0 license).
-- **Variables:**
-  - InvoiceNo: 6-digit transaction ID (cancellations start with 'C').
-  - StockCode: 5-digit product code.
-  - Description: Product name.
-  - Quantity: Items per transaction.
-  - InvoiceDate: Transaction date and time.
-  - UnitPrice: Price per item.
-  - CustomerID: Unique customer identifier.
-  - Country: Customer’s country.
-- **Initial Exploration:**
+
+</br> You can visit the original datasource at: 
+<a href='https://archive.ics.uci.edu/dataset/502/online+retail+ii'> Click here </a>
+
+</br>- **Import Dataset**: 
+
+We use VSCode to execute the codes so that we have to install neccessary python libs for further using. If you Google Colab then you an skip the steps of installing some of popular python libs that are alredy installed to Colab. 
+
+</br> Install the libs that we will use to analyze the dataset
+
+```python
+pip install pandas
+pip install matplotlib
+pip install seaborn
+
+```
+```python
+pip install scikit-learn
+```
+
+```python
+import sklearn
+print(sklearn.__version__)
+```
+
+</br> Import libs:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import StandardScaler
+
+# setting to make numbers displayed with 2 decimals
+pd.options.display.float_format = "{:20.2f}".format
+
+# show all columns on output
+pd.set_option('display.max_columns', 999)
+
+```
+
+</br> We shall adjust the output display a litlte bit to review the result more efficiently using : ``` pd.options.display.float_format = "{:20.2f}".format``` and ``` pd.set_option('display.max_columns', 999)```
+
+</br> In order to help the machine read the excel file more efficiently, We will import the openpyxl engine :
+
+```python
+pip install openpyxl
+```
+
+```python
+import openpyxl
+print(oepnpyxl.__vesion__)
+```
+
+```python
+# read the first sheet of the file:
+df = pd.read_excel('/Users/hatde/Desktop/Online Retail II/online_retail_II.xlsx', sheet_name=0)
+```
+
+
+
+- **Additional Variable Information:**
+  
+  - InvoiceNo: Invoice number. Nominal. A 6-digit integral number uniquely assigned to each transaction. If this code starts with the letter 'c', it indicates a cancellation.
+  - StockCode: Product (item) code. Nominal. A 5-digit integral number uniquely assigned to each distinct product. 
+  - Description: Product (item) name. Nominal. 
+  - Quantity: The quantities of each product (item) per transaction. Numeric.	
+  - InvoiceDate: Invice date and time. Numeric. The day and time when a transaction was generated. 
+  - UnitPrice: Unit price. Numeric. Product price per unit in sterling (Â£). 
+  - CustomerID: Customer number. Nominal. A 5-digit integral number uniquely assigned to each customer. 
+  - Country: Country name. Nominal. The name of the country where a customer resides.
+
+ 
+</br> - **Initial Exploration:**
+  
+  - Review 10 top rows of the dataset:
+```python
+df.head(10)
+```
+
   - Assess missing values (e.g., CustomerID, Description).
+
+```python
+df.info()
+```
+
+<img alt='df-info' src='img/df.info().png'>
+
+</br> So from the result, we see that there are some missing vaues in columns Description and Customer ID.
+
+
+  - Look at the descriptive analysis for numerics colums:
+
+```python
+df.describe()
+```
+</br> The result should be as below:
+
+|       |  Quantity |                   InvoiceDate |     Price | Customer ID |
+|------:|----------:|------------------------------:|----------:|-------------|
+| count | 525461.00 |                        525461 | 525461.00 |   417534.00 |
+|  mean |     10.34 | 2010-06-28 11:37:36.845017856 |      4.69 |    15360.65 |
+|   min |  -9600.00 |           2009-12-01 07:45:00 | -53594.36 |    12346.00 |
+|   25% |      1.00 |           2010-03-21 12:20:00 |      1.25 |    13983.00 |
+|   50% |      3.00 |           2010-07-06 09:51:00 |      2.10 |    15311.00 |
+|   75% |     10.00 |           2010-10-15 12:45:00 |      4.21 |    16799.00 |
+|   max |  19152.00 |           2010-12-09 20:01:00 |  25111.09 |    18287.00 |
+|   std |    107.42 |                           NaN |    146.13 |     1680.81 |
+
+</br> The Min in Quantity and Price columns look weird since negative number of stocks bought by customer should not less than 0. However, we can also see the negative item quantity and 
+
+  - Look at the descriptive 
   - Aggregated metrics per customer:
   - Verify data types (e.g., InvoiceDate as datetime).
   - Summarize key metrics (e.g., transaction count, Quantity, UnitPrice).
